@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Net;
 using VendorPortal.API.Models.Domain;
 using VendorPortal.API.Models.DTO;
@@ -84,6 +85,44 @@ namespace VendorPortal.API.Controllers
 
             return BadRequest("Something went wrong");
         }
+
+
+        [HttpGet]
+        [Route("All")]
+        public async Task<IActionResult> GetAll()
+        {
+
+            var vendorResult = await userManager.GetUsersInRoleAsync("Vendor");
+
+            if (vendorResult != null)
+            {
+                List<VendorResponseDto> allVendor = new List<VendorResponseDto>();
+
+                foreach (var vendor in allVendor)
+                {
+                    var newVendor = new VendorResponseDto
+                    {
+                        Id = vendor.Id,
+                        OrganizationName = vendor.OrganizationName,
+                        Name = vendor.Name,
+                        PhoneNumber = vendor.PhoneNumber,
+                        State = vendor.State,
+                        Address = vendor.Address,
+                        Pincode = (int)vendor.Pincode,
+                        City = vendor.City,
+                        VendorCategory = vendor.VendorCategory,
+                    };
+
+                    allVendor.Add(newVendor);
+                }
+
+                return Ok(allVendor);
+            }
+
+
+            return BadRequest("Something went wrong");
+        }
+
 
         [HttpPut]
         [Route("{id:Guid}")]

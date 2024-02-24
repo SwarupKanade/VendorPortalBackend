@@ -38,5 +38,33 @@ namespace VendorPortal.API.Controllers
             return Ok(vendorCategory);
         }
 
+
+        [HttpGet]
+        [Route("All")]
+        public async Task<IActionResult> GetAll()
+        {
+            var vendorCategoryResult = await dbContext.VendorCategories.ToListAsync();
+
+            if (vendorCategoryResult != null) {
+                List<VendorCategoryResponseDto> allVendorCategory = new List<VendorCategoryResponseDto>();
+                foreach (var vendorCategory in allVendorCategory)
+                {
+                    var newVendorCategory = new VendorCategoryResponseDto
+                    {
+                        Name = vendorCategory.Name,
+                        Description = vendorCategory.Description,
+                        DocumentList = vendorCategory.DocumentList,
+                    };
+
+                    allVendorCategory.Add(newVendorCategory);
+                }
+                
+                return Ok(allVendorCategory);
+            }
+
+            return BadRequest("Something went wrong");
+                
+        }
+
     }
 }

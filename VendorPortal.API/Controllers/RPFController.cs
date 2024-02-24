@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.EntityFrameworkCore;
 using VendorPortal.API.Data;
 using VendorPortal.API.Models.Domain;
@@ -70,6 +71,36 @@ namespace VendorPortal.API.Controllers
 
 
                 return Ok(rfp);
+            }
+
+            return BadRequest("Something went wrong");
+        }
+
+        [HttpGet]
+        [Route("All")]
+        public async Task<IActionResult> GetAll()
+        {
+            var rfpsResult = await dbContext.RFPs.Include("VendorCategory").Include("Project").ToListAsync();
+
+            if (rfpsResult != null)
+            {
+                List<RFPResponseDto> allRfp = new List<RFPResponseDto>();
+                foreach (var rfp in allRfp)
+                {
+                    var newrfp = new RFPResponseDto
+                    {
+                        Title = rfp.Title,
+                        Document = rfp.Document,
+                        EndDate = rfp.EndDate,
+                        VendorCategory = rfp.VendorCategory,
+                        Project = rfp.Project,
+                    };
+
+                    allRfp.Add(newrfp);
+
+                }
+                
+                return Ok(allRfp);
             }
 
             return BadRequest("Something went wrong");
