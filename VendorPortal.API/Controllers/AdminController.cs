@@ -19,6 +19,7 @@ namespace VendorPortal.API.Controllers
         }
 
         [HttpGet]
+        [Route("All")]
         public async Task<IActionResult> GetAll()
         {
             var adminsResult = await userManager.GetUsersInRoleAsync("Admin");

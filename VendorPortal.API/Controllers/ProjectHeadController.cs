@@ -129,6 +129,7 @@ namespace VendorPortal.API.Controllers
                     {
                         Id = projectHead.Id,
                         Name = projectHead.Name,
+                        Email = projectHead.Email,
                         PhoneNumber = projectHead.PhoneNumber,
 
                     };

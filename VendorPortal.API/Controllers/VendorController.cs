@@ -70,6 +70,7 @@ namespace VendorPortal.API.Controllers
                     Id = vendorResult.Id,
                     OrganizationName = vendorResult.OrganizationName,
                     Name = vendorResult.Name,
+                    Email = vendorResult.Email,
                     PhoneNumber = vendorResult.PhoneNumber,
                     State = vendorResult.State,
                     Address = vendorResult.Address,
@@ -98,13 +99,14 @@ namespace VendorPortal.API.Controllers
             {
                 List<VendorResponseDto> allVendor = new List<VendorResponseDto>();
 
-                foreach (var vendor in allVendor)
+                foreach (var vendor in vendorResult)
                 {
                     var newVendor = new VendorResponseDto
                     {
                         Id = vendor.Id,
                         OrganizationName = vendor.OrganizationName,
                         Name = vendor.Name,
+                        Email = vendor.Email,
                         PhoneNumber = vendor.PhoneNumber,
                         State = vendor.State,
                         Address = vendor.Address,

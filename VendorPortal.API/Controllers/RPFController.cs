@@ -84,23 +84,21 @@ namespace VendorPortal.API.Controllers
 
             if (rfpsResult != null)
             {
-                List<RFPResponseDto> allRfp = new List<RFPResponseDto>();
-                foreach (var rfp in allRfp)
-                {
-                    var newrfp = new RFPResponseDto
-                    {
-                        Title = rfp.Title,
-                        Document = rfp.Document,
-                        EndDate = rfp.EndDate,
-                        VendorCategory = rfp.VendorCategory,
-                        Project = rfp.Project,
-                    };
-
-                    allRfp.Add(newrfp);
-                }
-
                 return Ok(rfpsResult);
-                
+            }
+
+            return BadRequest("Something went wrong");
+        }
+
+        [HttpGet]
+        [Route("VendorCategory/{id:Guid}")]
+        public async Task<IActionResult> GetAllByVendorCategory([FromRoute] Guid id)
+        {
+            var rfpsResult = await dbContext.RFPs.Include("VendorCategory").Include("Project").Where(x=>x.VendorCategoryId==id).ToListAsync();
+
+            if (rfpsResult != null)
+            {
+                return Ok(rfpsResult);
             }
 
             return BadRequest("Something went wrong");
