@@ -133,6 +133,15 @@ namespace VendorPortal.API.Controllers
 
             if (vendorResult != null)
             {
+
+                if (vendorUpdateDto.NewPassword != "")
+                {
+                    var passResult = await userManager.ChangePasswordAsync(vendorResult, vendorUpdateDto.CurrentPassword, vendorUpdateDto.NewPassword);
+                    if (!passResult.Succeeded)
+                    {
+                        return BadRequest(passResult.Errors);
+                    }
+                }
                 vendorResult.OrganizationName = vendorUpdateDto.OrganizationName;
                 vendorResult.Name = vendorUpdateDto.Name;
                 vendorResult.PhoneNumber = vendorUpdateDto.PhoneNumber;
@@ -141,8 +150,6 @@ namespace VendorPortal.API.Controllers
                 vendorResult.Address = vendorUpdateDto.Address;
                 vendorResult.Pincode = vendorUpdateDto.Pincode;
                 
-                await userManager.ChangePasswordAsync(vendorResult, vendorUpdateDto.CurrentPassword, vendorUpdateDto.Password);
-
                 await userManager.UpdateAsync(vendorResult);
 
                 var vendor = new VendorResponseDto

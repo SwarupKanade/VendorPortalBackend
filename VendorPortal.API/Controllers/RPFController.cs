@@ -97,10 +97,10 @@ namespace VendorPortal.API.Controllers
                     };
 
                     allRfp.Add(newrfp);
-
                 }
+
+                return Ok(rfpsResult);
                 
-                return Ok(allRfp);
             }
 
             return BadRequest("Something went wrong");

@@ -83,12 +83,18 @@ namespace VendorPortal.API.Controllers
 
             if (projectHeadResult != null)
             {
+                if (projectHeadUpdateDto.NewPassword != "")
+                {
+                    var passResult = await userManager.ChangePasswordAsync(projectHeadResult, projectHeadUpdateDto.CurrentPassword, projectHeadUpdateDto.NewPassword);
+                    if (!passResult.Succeeded)
+                    {
+                        return BadRequest(passResult.Errors);
+                    }
+                }
                 projectHeadResult.Name = projectHeadUpdateDto.Name;
                 projectHeadResult.PhoneNumber = projectHeadUpdateDto.PhoneNumber;
 
-                await userManager.ChangePasswordAsync(projectHeadResult, projectHeadUpdateDto.CurrentPassword, projectHeadUpdateDto.Password);
-
-
+              
                 await userManager.UpdateAsync(projectHeadResult);
 
                 var projectHead = new ProjectHeadResponseDto

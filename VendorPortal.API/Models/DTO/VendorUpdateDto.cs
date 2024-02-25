@@ -10,7 +10,7 @@
         public string Address { get; set; }
         public int Pincode { get; set; }
         public string CurrentPassword { get; set; }
-        public string Password { get; set; }
+        public string NewPassword { get; set; }
         public Guid VendorCategoryId { get; set; }
     }
 }
