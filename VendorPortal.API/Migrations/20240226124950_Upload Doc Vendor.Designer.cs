@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VendorPortal.API.Data;
 
@@ -11,9 +12,11 @@ using VendorPortal.API.Data;
 namespace VendorPortal.API.Migrations
 {
     [DbContext(typeof(VendorPortalDbContext))]
-    partial class VendorPortalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240226124950_Upload Doc Vendor")]
+    partial class UploadDocVendor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

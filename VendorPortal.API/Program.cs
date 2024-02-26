@@ -99,6 +99,12 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/RFPDocuments"
 });
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "VendorDocuments")),
+    RequestPath = "/VendorDocuments"
+});
+
 app.MapControllers();
 
 app.Run();

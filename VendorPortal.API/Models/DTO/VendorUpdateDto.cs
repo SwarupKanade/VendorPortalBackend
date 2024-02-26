@@ -9,8 +9,9 @@
         public string City { get; set; }
         public string Address { get; set; }
         public int Pincode { get; set; }
-        public string CurrentPassword { get; set; }
-        public string NewPassword { get; set; }
-        public Guid VendorCategoryId { get; set; }
+        public string CurrentPassword { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
+        public List<IFormFile>? Documents { get; set; }
+
     }
 }
