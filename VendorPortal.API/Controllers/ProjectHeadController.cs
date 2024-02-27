@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using VendorPortal.API.Mail;
 using VendorPortal.API.Models.Domain;
 using VendorPortal.API.Models.DTO;
 
@@ -12,10 +13,13 @@ namespace VendorPortal.API.Controllers
     {
 
         private readonly UserManager<UserProfile> userManager;
+        private readonly EmailService emailService;
 
-        public ProjectHeadController(UserManager<UserProfile> userManager)
+
+        public ProjectHeadController(UserManager<UserProfile> userManager, EmailService emailService)
         {
             this.userManager = userManager;
+            this.emailService = emailService;
         }
 
 
@@ -43,6 +47,7 @@ namespace VendorPortal.API.Controllers
 
                 if (projectHeadResult.Succeeded)
                 {
+                    SendWelcomeEmail(newProjectHead);
                     return Ok("ProjectHead was registered! Please login.");
                 }
             }
@@ -144,6 +149,14 @@ namespace VendorPortal.API.Controllers
 
 
             return BadRequest("Something went wrong");
+        }
+
+        private void SendWelcomeEmail(UserProfile user)
+        {
+            string subject = $"Welcome to Our Application Project Head ID {user.Id}";
+            string body = $"Dear {user.Name},\n\nWelcome to our application! Your username is: {user.UserName} and your password is: Pass@123\n\nBest regards,\nYour Application Team";
+
+            emailService.SendEmail(user.Email, subject, body);
         }
     }
 }

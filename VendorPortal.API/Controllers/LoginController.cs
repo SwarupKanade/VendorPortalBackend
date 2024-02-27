@@ -64,6 +64,7 @@ namespace VendorPortal.API.Controllers
             var claims = new List<Claim>();
 
             claims.Add(new Claim(ClaimTypes.Email, user.Email));
+            claims.Add(new Claim(ClaimTypes.Sid, user.Id));
 
             foreach (var role in roles)
             {

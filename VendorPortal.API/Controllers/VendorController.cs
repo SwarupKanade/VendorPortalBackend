@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Net;
+using VendorPortal.API.Mail;
 using VendorPortal.API.Models.Domain;
 using VendorPortal.API.Models.DTO;
 
@@ -17,13 +18,15 @@ namespace VendorPortal.API.Controllers
         private readonly UserManager<UserProfile> userManager;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly EmailService emailService;
 
         public VendorController(UserManager<UserProfile> userManager, IWebHostEnvironment webHostEnvironment,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, EmailService emailService)
         {
             this.userManager = userManager;
             this.webHostEnvironment = webHostEnvironment;
             this.httpContextAccessor = httpContextAccessor;
+            this.emailService = emailService;
         }
 
 
@@ -57,6 +60,7 @@ namespace VendorPortal.API.Controllers
 
                     if (vendorResult.Succeeded)
                     {
+                        SendWelcomeEmail(newVendor);
                         return Ok("Vendor was registered! Please login.");
                     }
             }
@@ -229,6 +233,14 @@ namespace VendorPortal.API.Controllers
             {
                 ModelState.AddModelError("file", "File size more than 10MB, please upload a smaller size file.");
             }
+        }
+
+        private void SendWelcomeEmail(UserProfile user)
+        {
+            string subject = $"Welcome to Our Application Vendor ID {user.Id}";
+            string body = $"Dear {user.Name},\n\nWelcome to our application! Your username is: {user.UserName} and your password is: Pass@123\n\nBest regards,\nYour Application Team";
+
+            emailService.SendEmail(user.Email, subject, body);
         }
 
     }
