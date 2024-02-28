@@ -9,14 +9,14 @@ namespace VendorPortal.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RPFController : ControllerBase
+    public class RFPController : ControllerBase
     {
 
         private readonly VendorPortalDbContext dbContext;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public RPFController(VendorPortalDbContext dbContext, IWebHostEnvironment webHostEnvironment,
+        public RFPController(VendorPortalDbContext dbContext, IWebHostEnvironment webHostEnvironment,
             IHttpContextAccessor httpContextAccessor)
         {
             this.dbContext = dbContext;
