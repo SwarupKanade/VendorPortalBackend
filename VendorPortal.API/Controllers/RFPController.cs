@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.EntityFrameworkCore;
 using VendorPortal.API.Data;
 using VendorPortal.API.Models.Domain;
@@ -47,6 +46,10 @@ namespace VendorPortal.API.Controllers
                 await dbContext.RFPs.AddAsync(rfp);
                 await dbContext.SaveChangesAsync();
                 return Ok(rfp);
+            }
+            else
+            {
+                return BadRequest("Document File Error");
             }
             return BadRequest("Something went wrong");
         }
@@ -106,9 +109,12 @@ namespace VendorPortal.API.Controllers
 
         private async Task<string> Upload(IFormFile document)
         {
-            System.Console.WriteLine(Path.GetFileName(document.FileName));
-            var localFilePath = Path.Combine(webHostEnvironment.ContentRootPath, "RFPDocuments",
-                document.FileName);
+            var folder = Path.Combine(webHostEnvironment.ContentRootPath, "RFPDocuments");
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+            var localFilePath = Path.Combine(folder, document.FileName);
 
             // Upload Image to Local Path
             using var stream = new FileStream(localFilePath, FileMode.Create);

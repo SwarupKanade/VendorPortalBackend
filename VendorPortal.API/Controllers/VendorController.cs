@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Net;
+using System.Reflection.Metadata;
 using VendorPortal.API.Mail;
 using VendorPortal.API.Models.Domain;
 using VendorPortal.API.Models.DTO;
@@ -144,13 +145,10 @@ namespace VendorPortal.API.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] string id, [FromForm] VendorUpdateDto vendorUpdateDto)
         {
-            System.Console.WriteLine(vendorUpdateDto.NewPassword);
-
             var vendorResult = await userManager.FindByIdAsync(id);
 
             if (vendorResult != null)
             {
-
                 if (vendorUpdateDto.NewPassword != "" )
                 {
                     var passResult = await userManager.ChangePasswordAsync(vendorResult, vendorUpdateDto.CurrentPassword, vendorUpdateDto.NewPassword);
@@ -160,16 +158,25 @@ namespace VendorPortal.API.Controllers
                     }
                 }
 
-                if(vendorUpdateDto.Documents != null)
+                if (vendorUpdateDto.Documents != null)
                 {
-                    string DocPaths = "";
+
+                    string docPaths = "";
+
                     foreach (var doc in vendorUpdateDto.Documents)
                     {
                         ValidateFileUpload(doc);
-                        string docPath = await Upload(doc, id);
-                        DocPaths = DocPaths +";"+ docPath;
+
+                        if (ModelState.IsValid)
+                        {
+                            string docPath = await Upload(doc, id);
+                            docPaths += (string.IsNullOrEmpty(docPaths) ? "" : ";") + docPath;
+                            vendorResult.DocumentPaths = docPaths;
+                        }
+                        else { 
+                            return BadRequest("Document File Error"); 
+                        }
                     }
-                    vendorResult.DocumentPaths = DocPaths;
                 }
 
                 vendorResult.OrganizationName = vendorUpdateDto.OrganizationName;
