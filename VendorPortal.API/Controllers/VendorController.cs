@@ -61,7 +61,7 @@ namespace VendorPortal.API.Controllers
                 VendorCategoryId = vendorDto.VendorCategoryId,
                 DocumentPaths = DocPath,
                 DocumentVerified = DocVerify,
-                DocumentComment = "Upload Listed Documents"
+                DocumentComment = "Upload All Listed Documents"
             };
 
             var vendorResult = await userManager.CreateAsync(newVendor, "Pass@123");
