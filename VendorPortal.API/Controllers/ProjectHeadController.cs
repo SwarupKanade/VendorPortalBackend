@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Net;
 using VendorPortal.API.Mail;
 using VendorPortal.API.Models.Domain;
@@ -25,6 +27,7 @@ namespace VendorPortal.API.Controllers
 
         [HttpPost]
         [Route("Register")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register([FromBody] ProjectHeadDto projectHeadDto)
         {
 

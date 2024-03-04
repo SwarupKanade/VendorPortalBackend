@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using VendorPortal.API.Data;
 using VendorPortal.API.Models.Domain;
 using VendorPortal.API.Models.DTO;
@@ -26,6 +28,7 @@ namespace VendorPortal.API.Controllers
 
         [HttpPost]
         [Route("Add")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add([FromForm] RFPDto rfpDto)
         {
             ValidateFileUpload(rfpDto.DocumentFile);
@@ -129,7 +132,7 @@ namespace VendorPortal.API.Controllers
 
         private void ValidateFileUpload(IFormFile document)
         {
-            var allowedExtensions = new string[] { ".jpg", ".jpeg", ".png", ".pdf" };
+            var allowedExtensions = new string[] { ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xlsx" };
 
             if (!allowedExtensions.Contains(Path.GetExtension(document.FileName)))
             {

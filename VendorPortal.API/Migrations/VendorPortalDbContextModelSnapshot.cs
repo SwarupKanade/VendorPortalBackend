@@ -178,6 +178,25 @@ namespace VendorPortal.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("VendorPortal.API.Models.Domain.Document", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Documents");
+                });
+
             modelBuilder.Entity("VendorPortal.API.Models.Domain.Project", b =>
                 {
                     b.Property<Guid>("Id")
@@ -259,7 +278,13 @@ namespace VendorPortal.API.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DocumentComment")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DocumentPaths")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DocumentVerified")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")

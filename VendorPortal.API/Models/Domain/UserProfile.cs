@@ -12,6 +12,8 @@ namespace VendorPortal.API.Models.Domain
         public string? Address { get; set; }
         public int? Pincode { get; set; }
         public string? DocumentPaths { get; set; }
+        public string? DocumentVerified { get; set; }
+        public string? DocumentComment { get; set; }
 
         // Navigation properties
         public VendorCategory VendorCategory { get; set; }

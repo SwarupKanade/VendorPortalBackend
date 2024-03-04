@@ -12,8 +12,8 @@ using VendorPortal.API.Data;
 namespace VendorPortal.API.Migrations
 {
     [DbContext(typeof(VendorPortalDbContext))]
-    [Migration("20240226124950_Upload Doc Vendor")]
-    partial class UploadDocVendor
+    [Migration("20240304070842_DocVerify")]
+    partial class DocVerify
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -181,6 +181,25 @@ namespace VendorPortal.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("VendorPortal.API.Models.Domain.Document", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Documents");
+                });
+
             modelBuilder.Entity("VendorPortal.API.Models.Domain.Project", b =>
                 {
                     b.Property<Guid>("Id")
@@ -262,7 +281,13 @@ namespace VendorPortal.API.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DocumentComment")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DocumentPaths")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DocumentVerified")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")

@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Net;
 using VendorPortal.API.Data;
 using VendorPortal.API.Models.Domain;
 using VendorPortal.API.Models.DTO;
@@ -12,12 +9,12 @@ namespace VendorPortal.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class VendorCategoryController : ControllerBase
+    public class DocumentController : ControllerBase
     {
 
         private readonly VendorPortalDbContext dbContext;
 
-        public VendorCategoryController(VendorPortalDbContext dbContext)
+        public DocumentController(VendorPortalDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
@@ -26,19 +23,18 @@ namespace VendorPortal.API.Controllers
         [HttpPost]
         [Route("Add")]
         //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Add([FromBody] VendorCategoryDto vendorCategoryDto)
+        public async Task<IActionResult> Add([FromBody] DocumentDto documentDto)
         {
 
-            var vendorCategory = new VendorCategory
+            var document = new Document
             {
-                Name = vendorCategoryDto.Name,
-                Description = vendorCategoryDto.Description,
-                DocumentList = vendorCategoryDto.DocumentList,
+                Name = documentDto.Name,
+                Description = documentDto.Description
             };
 
-            await dbContext.VendorCategories.AddAsync(vendorCategory);
+            await dbContext.Documents.AddAsync(document);
             await dbContext.SaveChangesAsync();
-            return Ok(vendorCategory);
+            return Ok(document);
         }
 
 
@@ -46,11 +42,11 @@ namespace VendorPortal.API.Controllers
         [Route("All")]
         public async Task<IActionResult> GetAll()
         {
-            var vendorCategoryResult = await dbContext.VendorCategories.ToListAsync();
+            var documentResult = await dbContext.Documents.ToListAsync();
 
-            if (vendorCategoryResult != null) {
+            if (documentResult != null) {
                 
-                return Ok(vendorCategoryResult);
+                return Ok(documentResult);
             }
 
             return BadRequest("Something went wrong");

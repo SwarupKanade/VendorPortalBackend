@@ -15,6 +15,7 @@ namespace VendorPortal.API.Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<RFP> RFPs { get; set; }
         public DbSet<VendorCategory> VendorCategories { get; set; }
+        public DbSet<Document> Documents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
