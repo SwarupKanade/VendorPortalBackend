@@ -23,8 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="RFPDocuments\" />
-    <Folder Include="VendorDocuments\" />
+    <Folder Include="Files\" />
   </ItemGroup>
 
 </Project>

@@ -41,10 +41,11 @@ namespace VendorPortal.API.Controllers
             var DocVerify = "";
             var DocPath = "";
 
-            while (0 < DocLen) {
-                DocVerify += "False" + (DocLen>1? "|" : "");
+            while (0 < DocLen)
+            {
+                DocVerify += "False" + (DocLen > 1 ? "|" : "");
                 DocPath += "" + (DocLen > 1 ? "|" : "");
-                DocLen --;
+                DocLen--;
             }
 
             var newVendor = new UserProfile
@@ -69,14 +70,14 @@ namespace VendorPortal.API.Controllers
             if (vendorResult.Succeeded)
             {
                 List<string> roles = new List<string>();
-                    roles.Add("Vendor");
-                    vendorResult = await userManager.AddToRolesAsync(newVendor, roles);
+                roles.Add("Vendor");
+                vendorResult = await userManager.AddToRolesAsync(newVendor, roles);
 
-                    if (vendorResult.Succeeded)
-                    {
-                        SendWelcomeEmail(newVendor);
-                        return Ok("Vendor was registered! Please login.");
-                    }
+                if (vendorResult.Succeeded)
+                {
+                    SendWelcomeEmail(newVendor);
+                    return Ok("Vendor was registered! Please login.");
+                }
             }
 
             return BadRequest("Something went wrong");
@@ -89,8 +90,8 @@ namespace VendorPortal.API.Controllers
 
             var vendorResult = await userManager.FindByIdAsync(id);
 
-           if (vendorResult != null)
-           {
+            if (vendorResult != null)
+            {
                 var vendor = new VendorResponseDto
                 {
                     Id = vendorResult.Id,
@@ -106,10 +107,10 @@ namespace VendorPortal.API.Controllers
                     VendorCategory = vendorResult.VendorCategory,
                 };
 
-        
-               return Ok(vendor);
-           }
-            
+
+                return Ok(vendor);
+            }
+
 
             return BadRequest("Something went wrong");
         }
@@ -117,10 +118,28 @@ namespace VendorPortal.API.Controllers
 
         [HttpGet]
         [Route("All")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? nameVal, [FromQuery] string? orgVal,
+            [FromQuery] string? catVal)
         {
 
-            var vendorResult = await userManager.GetUsersInRoleAsync("Vendor");
+            var dbVendorResult = await userManager.GetUsersInRoleAsync("Vendor");
+            var vendorResult = dbVendorResult.AsQueryable();
+
+            if (String.IsNullOrWhiteSpace(nameVal) == false)
+            {
+                vendorResult = vendorResult.Where(x => x.Name.ToLower().Contains(nameVal.ToLower()));
+            }
+
+            if (String.IsNullOrWhiteSpace(orgVal) == false)
+            {
+                vendorResult = vendorResult.Where(x => x.OrganizationName.ToLower().Contains(orgVal.ToLower()));
+            }
+
+            if (String.IsNullOrWhiteSpace(catVal) == false)
+            {
+                vendorResult = vendorResult.Where(x => x.VendorCategory.Name.ToLower().Contains(catVal.ToLower()));
+            }
+
 
             if (vendorResult != null)
             {
@@ -162,7 +181,7 @@ namespace VendorPortal.API.Controllers
 
             if (vendorResult != null)
             {
-                if (vendorUpdateDto.NewPassword != "" )
+                if (vendorUpdateDto.NewPassword != "")
                 {
                     var passResult = await userManager.ChangePasswordAsync(vendorResult, vendorUpdateDto.CurrentPassword, vendorUpdateDto.NewPassword);
                     if (!passResult.Succeeded)
@@ -178,7 +197,7 @@ namespace VendorPortal.API.Controllers
                 vendorResult.State = vendorUpdateDto.State;
                 vendorResult.Address = vendorUpdateDto.Address;
                 vendorResult.Pincode = vendorUpdateDto.Pincode;
-               
+
                 await userManager.UpdateAsync(vendorResult);
 
                 var vendor = new VendorResponseDto
@@ -211,7 +230,7 @@ namespace VendorPortal.API.Controllers
 
             if (vendorResult != null)
             {
-                
+
                 string docPaths = "";
                 string docVerify = "";
 
@@ -228,8 +247,8 @@ namespace VendorPortal.API.Controllers
                         vendorResult.DocumentPaths = docPaths;
                     }
                     else
-                    { 
-                       return BadRequest("Document File Error");
+                    {
+                        return BadRequest("Document File Error");
                     }
                 }
 
@@ -299,7 +318,7 @@ namespace VendorPortal.API.Controllers
 
         private async Task<string> Upload(IFormFile document, string id)
         {
-            var folder = Path.Combine(webHostEnvironment.ContentRootPath,"VendorDocuments", id);
+            var folder = Path.Combine(webHostEnvironment.ContentRootPath, "Files", "VendorDocuments", id);
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
@@ -308,7 +327,7 @@ namespace VendorPortal.API.Controllers
 
             using var stream = new FileStream(localFilePath, FileMode.Create);
             await document.CopyToAsync(stream);
-            var urlFilePath = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}{httpContextAccessor.HttpContext.Request.PathBase}/VendorDocuments/{id}/{document.FileName}";
+            var urlFilePath = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}{httpContextAccessor.HttpContext.Request.PathBase}/Files/VendorDocuments/{id}/{document.FileName}";
             var FilePath = urlFilePath;
             return FilePath;
         }

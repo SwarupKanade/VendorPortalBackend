@@ -13,9 +13,11 @@ namespace VendorPortal.API.Data
         }
 
         public DbSet<Project> Projects { get; set; }
+        public DbSet<Document> Documents { get; set; }
         public DbSet<RFP> RFPs { get; set; }
         public DbSet<VendorCategory> VendorCategories { get; set; }
-        public DbSet<Document> Documents { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductCategory> ProductCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -53,6 +55,13 @@ namespace VendorPortal.API.Data
             builder.Entity<UserProfile>().Navigation(e => e.VendorCategory).AutoInclude();
 
             builder.Entity<Project>().HasOne(u=>u.UserProfile).WithMany().HasForeignKey(u => u.ProjectHeadId);
+
+            builder.Entity<Product>().HasOne(u=>u.Category).WithMany().HasForeignKey(u => u.CategoryId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Product>().HasOne(u=>u.SubCategory).WithMany().HasForeignKey(u => u.SubCategoryId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ProductCategory>().HasOne(u => u.ParentCategory).WithMany().HasForeignKey(u => u.ParentCategoryId);
+
         }
 
     }

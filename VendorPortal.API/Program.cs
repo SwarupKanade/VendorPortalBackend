@@ -111,14 +111,8 @@ app.UseCors();
 
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "RFPDocuments")),
-    RequestPath = "/RFPDocuments"
-});
-
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "VendorDocuments")),
-    RequestPath = "/VendorDocuments"
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Files")),
+    RequestPath = "/Files"
 });
 
 app.MapControllers();

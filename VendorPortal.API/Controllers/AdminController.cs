@@ -94,7 +94,7 @@ namespace VendorPortal.API.Controllers
                 return Ok(admin);
             }
 
-            return BadRequest("Something went wrong");
+            return BadRequest();
         }
 
     }

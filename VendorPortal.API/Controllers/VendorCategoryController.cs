@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
 using System.Net;
 using VendorPortal.API.Data;
 using VendorPortal.API.Models.Domain;
@@ -25,7 +23,6 @@ namespace VendorPortal.API.Controllers
 
         [HttpPost]
         [Route("Add")]
-        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add([FromBody] VendorCategoryDto vendorCategoryDto)
         {
 

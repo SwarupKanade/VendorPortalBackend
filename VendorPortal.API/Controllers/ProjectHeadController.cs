@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 using System.Net;
 using VendorPortal.API.Mail;
 using VendorPortal.API.Models.Domain;
@@ -27,7 +25,6 @@ namespace VendorPortal.API.Controllers
 
         [HttpPost]
         [Route("Register")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register([FromBody] ProjectHeadDto projectHeadDto)
         {
 
@@ -124,15 +121,19 @@ namespace VendorPortal.API.Controllers
 
         [HttpGet]
         [Route("All")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? nameVal)
         {
+            var dbProjectHeadsResult = await userManager.GetUsersInRoleAsync("ProjectHead");
+            var projectHeadsResult = dbProjectHeadsResult.AsQueryable();
 
-            var projectHeadsResult = await userManager.GetUsersInRoleAsync("ProjectHead");
+            if (String.IsNullOrWhiteSpace(nameVal) == false)
+            {
+                projectHeadsResult = projectHeadsResult.Where(x => x.Name.ToLower().Contains(nameVal.ToLower()));
+            }
 
             if (projectHeadsResult != null)
             {
                 List<ProjectHeadResponseDto> allProjectHead = new List<ProjectHeadResponseDto>();
-
                 foreach (var projectHead in projectHeadsResult)
                 {
                     var newProjectHead = new ProjectHeadResponseDto
@@ -141,16 +142,12 @@ namespace VendorPortal.API.Controllers
                         Name = projectHead.Name,
                         Email = projectHead.Email,
                         PhoneNumber = projectHead.PhoneNumber,
-
                     };
-
                     allProjectHead.Add(newProjectHead);
                 }
-                
+
                 return Ok(allProjectHead);
             }
-
-
             return BadRequest("Something went wrong");
         }
 
