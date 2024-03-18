@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using VendorPortal.API.Models.DTO;
+using System.Data;
 
 namespace VendorPortal.API.Controllers
 {
@@ -65,12 +66,12 @@ namespace VendorPortal.API.Controllers
 
             claims.Add(new Claim(ClaimTypes.Email, user.Email));
             claims.Add(new Claim(ClaimTypes.Sid, user.Id));
+            claims.Add(new Claim("Verification", user.IsVerified.ToString()));
 
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

@@ -1,4 +1,6 @@
-﻿namespace VendorPortal.API.Models.Domain
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace VendorPortal.API.Models.Domain
 {
     public class RFP
     {
@@ -8,6 +10,9 @@
         public Guid ProjectId { get; set; }
         public Guid VendorCategoryId { get; set; }
         public DateTime EndDate { get;set; }
+
+        [NotMapped]
+        public bool IsActive => EndDate > DateTime.Now;
 
         // Navigation properties
         public VendorCategory VendorCategory { get; set; }

@@ -2,6 +2,8 @@
 {
     public class VendorDocUpdateDto
     {
-        public List<IFormFile> Documents { get; set; }
+        public Guid Id { get; set; }
+        public IFormFile Document { get; set; }
+
     }
 }

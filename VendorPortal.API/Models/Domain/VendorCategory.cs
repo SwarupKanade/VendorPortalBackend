@@ -8,6 +8,8 @@ namespace VendorPortal.API.Models.Domain
             public Guid Id { get; set; }
             public string Name { get; set; }
             public string? Description { get; set; }
-            public string DocumentList { get; set; }
+
+            // Navigation property for many-to-many relationship
+            public ICollection<VendorCategoryDocument> DocumentList { get; set; }
     }
 }

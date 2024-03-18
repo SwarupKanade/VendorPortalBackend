@@ -8,6 +8,6 @@ namespace VendorPortal.API.Models.DTO
         public string Name { get; set; }
         public string? Description { get; set; }
         [Required]
-        public string DocumentList { get; set; }
+        public List<Guid> DocumentList { get; set; }
     }
 }

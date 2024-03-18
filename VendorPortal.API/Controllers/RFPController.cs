@@ -50,7 +50,7 @@ namespace VendorPortal.API.Controllers
             }
             else
             {
-                return BadRequest("Document File Error");
+                return BadRequest(ModelState);
             }
         }
 
@@ -98,6 +98,33 @@ namespace VendorPortal.API.Controllers
         }
 
         [HttpGet]
+        [Route("AllActive")]
+        public async Task<IActionResult> GetAllActive([FromQuery] string? filterOn, [FromQuery] string? filterVal)
+        {
+            var rfpsResult = dbContext.RFPs.Include("VendorCategory").Include("Project").AsEnumerable().Where(x => x.IsActive);
+
+            if (String.IsNullOrWhiteSpace(filterOn) == false && String.IsNullOrWhiteSpace(filterVal) == false)
+            {
+                if (filterOn.Equals("title", StringComparison.OrdinalIgnoreCase))
+                {
+                    rfpsResult = rfpsResult.Where(x => x.Title.ToLower().Contains(filterVal.ToLower()));
+                }
+
+                if (filterOn.Equals("category", StringComparison.OrdinalIgnoreCase))
+                {
+                    rfpsResult = rfpsResult.Where(x => x.VendorCategory.Name.ToLower().Contains(filterVal.ToLower()));
+                }
+            }
+
+            if (rfpsResult != null)
+            {
+                return Ok(rfpsResult);
+            }
+
+            return BadRequest("Something went wrong");
+        }
+
+        [HttpGet]
         [Route("VendorCategory/{id:Guid}")]
         public async Task<IActionResult> GetAllByVendorCategory([FromRoute] Guid id)
         {
@@ -118,13 +145,15 @@ namespace VendorPortal.API.Controllers
             {
                 Directory.CreateDirectory(folder);
             }
-            var localFilePath = Path.Combine(folder, document.FileName);
 
-            // Upload Image to Local Path
+            string uniqueName = Guid.NewGuid().ToString();
+            string fileExt = Path.GetExtension(document.FileName);
+            var localFilePath = Path.Combine(folder, $"{uniqueName}{fileExt}");
+
             using var stream = new FileStream(localFilePath, FileMode.Create);
             await document.CopyToAsync(stream);
 
-            var urlFilePath = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}{httpContextAccessor.HttpContext.Request.PathBase}/Files/RFPDocuments/{document.FileName}";
+            var urlFilePath = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}{httpContextAccessor.HttpContext.Request.PathBase}/Files/RFPDocuments/{uniqueName}{fileExt}";
 
             var FilePath = urlFilePath;
 
@@ -135,7 +164,7 @@ namespace VendorPortal.API.Controllers
         {
             var allowedExtensions = new string[] { ".jpg", ".jpeg", ".png", ".pdf" };
 
-            if (!allowedExtensions.Contains(Path.GetExtension(document.FileName)))
+            if (!allowedExtensions.Contains(Path.GetExtension(document.FileName).ToLower()))
             {
                 ModelState.AddModelError("file", "Unsupported file extension");
             }

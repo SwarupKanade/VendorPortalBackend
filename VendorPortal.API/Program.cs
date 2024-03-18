@@ -5,6 +5,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 using VendorPortal.API.Data;
 using VendorPortal.API.Mail;
 using VendorPortal.API.Models.Domain;
@@ -49,7 +50,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddDbContext<VendorPortalDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("VendorPortalConnectionString")));
+    options.UseMySql(builder.Configuration.GetConnectionString("VendorPortalConnectionString"),
+    new MySqlServerVersion(new Version(8, 0, 36))));
 
 builder.Services.AddIdentityCore<UserProfile>()
     .AddRoles<IdentityRole>()

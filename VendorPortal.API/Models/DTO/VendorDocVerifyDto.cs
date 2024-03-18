@@ -2,7 +2,9 @@
 {
     public class VendorDocVerifyDto
     {
-        public List<bool> DocumentVerified { get; set; }
-        public string DocumentComment { get; set; }
+        public Guid Id { get; set; }
+        public bool DocumentVerified { get; set; }
+        public string? Comment { get; set; }
+
     }
 }

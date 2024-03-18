@@ -29,7 +29,8 @@ namespace VendorPortal.API.Controllers
             var document = new Document
             {
                 Name = documentDto.Name,
-                Description = documentDto.Description
+                Description = documentDto.Description,
+                VendorCategories = new List<VendorCategoryDocument>()
             };
 
             await dbContext.Documents.AddAsync(document);
@@ -42,7 +43,7 @@ namespace VendorPortal.API.Controllers
         [Route("All")]
         public async Task<IActionResult> GetAll()
         {
-            var documentResult = await dbContext.Documents.ToListAsync();
+            var documentResult = await dbContext.Documents.Include(x => x.VendorCategories).ToListAsync();
 
             if (documentResult != null) {
                 

@@ -11,12 +11,12 @@ namespace VendorPortal.API.Models.Domain
         public string? City { get; set; }
         public string? Address { get; set; }
         public int? Pincode { get; set; }
-        public string? DocumentPaths { get; set; }
-        public string? DocumentVerified { get; set; }
-        public string? DocumentComment { get; set; }
+        public bool IsVerified { get; set; }
+
+        public ICollection<DocumentsUpload>? DocumentsUploadList { get; set; }
 
         // Navigation properties
-        public VendorCategory VendorCategory { get; set; }
+        public VendorCategory? VendorCategory { get; set; }
 
     }
 }

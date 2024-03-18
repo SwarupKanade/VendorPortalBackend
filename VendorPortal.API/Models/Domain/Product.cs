@@ -9,8 +9,8 @@ namespace VendorPortal.API.Models.Domain
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string ImagePath { get; set; }
-        public string? ShortDescription { get; set; }
-        public string? LongDescription { get; set; }
+        public string ShortDescription { get; set; }
+        public string LongDescription { get; set; }
         public string UnitType { get; set; }
         public string Size { get; set; }
         public string Specification { get; set; }

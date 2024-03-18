@@ -48,9 +48,8 @@ namespace VendorPortal.API.Controllers
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
 
-            var projectResult = await dbContext.Projects.Include(u=>u.UserProfile).FirstOrDefaultAsync(x => x.Id == id);
+            var projectResult = await dbContext.Projects.Include("UserProfile").FirstOrDefaultAsync(x => x.Id == id);
 
-           
 
             if (projectResult != null)
             {
@@ -75,64 +74,26 @@ namespace VendorPortal.API.Controllers
         [Route("All")]
         public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery]string? filterVal)
         {
-            var projects = dbContext.Projects.Include("UserProfile").AsQueryable();
-            if(projects == null)
-            {
-                return NotFound();
-            }
+            var projectsResult = dbContext.Projects.Include("UserProfile").AsQueryable();
+            
 
-            if(String.IsNullOrWhiteSpace(filterOn)==false && String.IsNullOrWhiteSpace(filterOn) == false)
+            if(String.IsNullOrWhiteSpace(filterOn)==false && String.IsNullOrWhiteSpace(filterVal) == false)
             {
                 if (filterOn.Equals("projectHead",StringComparison.OrdinalIgnoreCase))
                 {
-                    projects = projects.Where(x=>x.UserProfile.Name.ToLower().Contains(filterVal.ToLower()));
-                    List<ProjectResponseDto> result = new List<ProjectResponseDto>();
-                    foreach (var project in projects)
-                    {
-                        var newProject = new ProjectResponseDto
-                        {
-                            Id = project.Id,
-                            Name = project.Name,
-                            ProjectStatus = project.ProjectStatus,
-                            CreatedOn = project.CreatedOn,
-                            Description = project.Description,
-                            ProjectHeadId = project.UserProfile.Id,
-                            ProjectHeadName = project.UserProfile.Name,
-                        };
-                        result.Add(newProject);
-                    }
-                    return Ok(result);
+                    projectsResult = projectsResult.Where(x=>x.UserProfile.Name.ToLower().Contains(filterVal.ToLower()));
+                    
                 }
                 if(filterOn.Equals("projectStatus", StringComparison.OrdinalIgnoreCase))
                 {
-                    projects = projects.Where(x=>x.ProjectStatus.ToLower().Contains(filterVal.ToLower()));
-                    List<ProjectResponseDto> result = new List<ProjectResponseDto>();
-                    foreach (var project in projects)
-                    {
-                        var newProject = new ProjectResponseDto
-                        {
-                            Id = project.Id,
-                            Name = project.Name,
-                            ProjectStatus = project.ProjectStatus,
-                            CreatedOn = project.CreatedOn,
-                            Description = project.Description,
-                            ProjectHeadId = project.UserProfile.Id,
-                            ProjectHeadName = project.UserProfile.Name,
-                        };
-                        result.Add(newProject);
-                    }
-                    return Ok(result);
+                    projectsResult = projectsResult.Where(x=>x.ProjectStatus.ToLower().Contains(filterVal.ToLower()));
                 }
-                var allprojects = await projects.ToListAsync();
-                return Ok(allprojects);
             }
 
-            var projectResult = await dbContext.Projects.Include(u => u.UserProfile).ToListAsync();
-
-            if (projectResult != null)
+            if (projectsResult != null)
             {
                 List<ProjectResponseDto> result = new List<ProjectResponseDto>();
-                foreach (var project in projectResult)
+                foreach (var project in projectsResult)
                 {
                     var newProject = new ProjectResponseDto
                     {
